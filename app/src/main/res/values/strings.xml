@@ -5,4 +5,8 @@
     <string name="required">*required</string>
     <string name="content">Content</string>
     <string name="save_the_note">Save the note</string>
+    <string name="this_field_can_not_be_empty">This field can not be empty</string>
+    <string name="done">Done!</string>
+    <string name="something_has_gone_wrong_please_try_again">Something has gone wrong, please try again!</string>
+    <string name="correct_the_fields_with_errors">Correct the fields with errors</string>
 </resources>
