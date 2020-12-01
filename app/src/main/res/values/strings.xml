@@ -9,4 +9,5 @@
     <string name="done">Done!</string>
     <string name="something_has_gone_wrong_please_try_again">Something has gone wrong, please try again!</string>
     <string name="correct_the_fields_with_errors">Correct the fields with errors</string>
+    <string name="you_have_no_notes">You have no notes</string>
 </resources>
