@@ -12,13 +12,14 @@ import com.example.notes.R
 import com.example.notes.databinding.FragmentListBinding
 import com.example.notes.framework.viewmodel.ListViewModel
 import com.example.notes.presentation.adapters.NotesListAdapter
+import com.example.notes.presentation.utils.ListAction
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment(), ListAction {
 
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ListViewModel by viewModels()
-    private val notesListAdapter = NotesListAdapter(arrayListOf())
+    private val notesListAdapter = NotesListAdapter(arrayListOf(), this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,5 +76,9 @@ class ListFragment : Fragment() {
     private fun goToNoteDetails(id: Long = 0L){
         val action = ListFragmentDirections.actionGoToNote(id)
         Navigation.findNavController(binding.addNoteFab).navigate(action)
+    }
+
+    override fun onClick(id: Long) {
+        goToNoteDetails(id)
     }
 }

@@ -4,12 +4,11 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.example.core.data.Note
@@ -23,6 +22,12 @@ class NoteFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: NoteViewModel by viewModels()
     private var currentNote = Note("", "", 0L, 0L)
+    private var noteId = 0L
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +39,14 @@ class NoteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        arguments?.let {
+            noteId = NoteFragmentArgs.fromBundle(it).noteId
+        }
+        if(noteId != 0L){
+            viewModel.getNote(noteId)
+        }
+
         setListeners()
         observeViewModel()
     }
@@ -41,6 +54,30 @@ class NoteFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.note_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_delete_note -> {
+                if(noteId != 0L){
+                    AlertDialog.Builder(binding.root.context)
+                        .setTitle(getString(R.string.delete_a_note))
+                        .setMessage(getString(R.string.are_you_sure_you_want_to_delete_this_note))
+                        .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                            viewModel.deleteNote(currentNote)
+                        }
+                        .setNegativeButton(getString(R.string.Cancel)) { _, _ ->}
+                        .create()
+                        .show()
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setListeners() {
@@ -95,6 +132,13 @@ class NoteFragment : Fragment() {
                 }else{
                     Toast.makeText(context, getString(R.string.something_has_gone_wrong_please_try_again), Toast.LENGTH_SHORT).show()
                 }
+            }
+        })
+
+        viewModel.currentNote.observe(viewLifecycleOwner, { note ->
+            note?.let {
+                currentNote = it
+                binding.note = currentNote
             }
         })
     }
