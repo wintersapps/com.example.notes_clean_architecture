@@ -12,3 +12,9 @@ fun convertToDate(textView: MaterialTextView, updateTime: Long){
     val dateToView = "Last update: ${sdf.format(resultDate)}"
     textView.text = dateToView
 }
+
+@BindingAdapter("android:wordsCount")
+fun getWordsCount(textView: MaterialTextView, wordsCount: Int){
+    val str = "Words: $wordsCount"
+    textView.text = str
+}
